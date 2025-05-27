@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1
+
+ARG DEVICE_PLATFORM=linux/arm64/v8
+
+FROM --platform=$DEVICE_PLATFORM alpine as model-image
+
+ADD ./vehicle_detector12n.tflite      /models/vehicle_detector12n.tflite
+ADD ./labels.txt     /models/labels.txt
+
+# When run, just show what models we have
+CMD ["/bin/ls", "/models"]

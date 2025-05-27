@@ -1,0 +1,9 @@
+0 bus
+1 car
+2 motorcycle
+3 truck
+4 van
+5 seatbelt_violation
+6 Mobile_violation
+7 Mobile_and_seatbelt_violation
+8 no_helmet
