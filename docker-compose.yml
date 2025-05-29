@@ -1,10 +1,9 @@
 version: '3.3'
-
 services:
   object-detector-python:
-    image: acap4-object-detector-python
+    image: ${APP_NAME}
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-file: "5"
         max-size: "100k"
@@ -12,7 +11,7 @@ services:
       - PYTHONUNBUFFERED=1
       - INFERENCE_HOST=unix:///tmp/acap-runtime.sock
       - INFERENCE_PORT=0
-      - MODEL_PATH=/models/vehicle_detector12n.tflite
+      - MODEL_PATH=${MODEL_PATH}
       - OBJECT_LIST_PATH=/models/labels.txt
     volumes:
       - acap_dl-models:/models:ro
@@ -20,18 +19,13 @@ services:
       - inference-server:/tmp
 
   inference-server:
-    image: axisecp/acap-runtime:2.0.0
+    image: ${INFERENCE_SERVER_IMAGE}
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-file: "5"
         max-size: "100k"
-    entrypoint:
-      - /opt/app/acap_runtime/acapruntime
-      - -m
-      - /models/vehicle_detector12n.tflite
-      - -j
-      - artpec8
+    entrypoint: ["/opt/app/acap_runtime/acapruntime", "-m", "${MODEL_PATH}", "-j", "${INFERENCE_CHIP}"]
     volumes:
       - acap_dl-models:/models:ro
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
@@ -41,7 +35,7 @@ services:
       - inference-server:/tmp
 
   acap_dl-models:
-    image: my-yolo-model
+    image: ${MODEL_NAME}
     volumes:
       - acap_dl-models:/models
 
